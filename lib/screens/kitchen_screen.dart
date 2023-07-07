@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ordering_system_fe/templates/base_widget.dart';
 
 class KitchenScreen extends StatefulWidget {
   static const String screenName = 'kitchen_screen';
@@ -8,34 +9,49 @@ class KitchenScreen extends StatefulWidget {
 }
 
 class _KitchenScreenState extends State<KitchenScreen> {
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        padding: EdgeInsets.all(30),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xff12161B),
-              Color(0xff0F4539),
+    return BaseWidget(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                children: [
+                  Image(
+                    image: ResizeImage(
+                      AssetImage(
+                        'images/yourlogo-white.png',
+                      ),
+                      height: 80,
+                      width: 80,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 40.0),
+                    child: Text(
+                      'ORDERING SYSTEM',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ),
+                ],
+              ),
+              MaterialButton(
+                onPressed: () {},
+                child: Icon(
+                  Icons.location_city,
+                  size: 50.0,
+                ),
+              ),
             ],
           ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text('Kitchen')
-          ],
-        ),
+          Text('ád'),
+          Text('ád'),
+        ],
       ),
     );
   }
 }
-
-
-
-
