@@ -10,6 +10,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'Roboto',
+        // textTheme: GoogleFonts.robotoTextTheme(),// Áp dụng font Roboto cho tất cả các TextTheme
+      ),
+
       initialRoute: HomeScreen.screenName,
       routes: {
         HomeScreen.screenName: (context) => HomeScreen(),
