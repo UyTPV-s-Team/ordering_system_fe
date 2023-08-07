@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ordering_system_fe/components/header_widget.dart';
@@ -18,6 +20,9 @@ class _ReadyScreenState extends State<ReadyScreen> {
     // TODO: implement initState
     super.initState();
     fetchOrders();
+    Timer.periodic(Duration(seconds: 5), (Timer timer) {
+      fetchOrders(); // Gọi phương thức fetchOrders để làm mới giao diện sau mỗi 10 giây
+    });
   }
 
   void fetchOrders() async {
@@ -27,8 +32,17 @@ class _ReadyScreenState extends State<ReadyScreen> {
     updateUI(updatedOrders);
   }
 
+  void updateOrder(orderId, status) async {
+    int responseStatus = await updateStatus(orderId, status);
+    if (responseStatus == 200) {
+      fetchOrders();
+    } else {
+      print('FAIL');
+    }
+  }
+
   List<Item> filterOrders(List<Item> orders) {
-    return orders.where((item) => item.isReady).toList();
+    return orders.where((item) => item.isReady && !item.isDelivered).toList();
   }
 
   void updateUI(orders) {
@@ -43,6 +57,10 @@ class _ReadyScreenState extends State<ReadyScreen> {
 
   Future<List<Item>> getOrders() async {
     return await Item.fetchItemsFromUrl();
+  }
+
+  Future<int> updateStatus(orderId, status) async {
+    return await Item.updateOrderStatus(orderId, status);
   }
 
   List<Item> updateOrders(List<Item> orders) {
@@ -221,6 +239,23 @@ class _ReadyScreenState extends State<ReadyScreen> {
                                             ),
                                           );
                                         },
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                          padding: MaterialStateProperty.all(EdgeInsets.all(20)),
+                                          backgroundColor: MaterialStateProperty.all(Color(0xff241417)),
+                                        ),
+                                        onPressed: () {
+                                          // Xử lý sự kiện khi nút được nhấn
+                                          updateOrder(item.id, 'delivered');
+                                        },
+                                        child: Text(
+                                          'Delivery',
+                                          style: TextStyle(fontSize: 24),
+                                        ),
                                       ),
                                     ),
                                   ],

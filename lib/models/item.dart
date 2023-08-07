@@ -19,9 +19,22 @@ class Item {
     required this.products,
   });
 
+  static Future<int> updateOrderStatus(String orderId, String status) async {
+    try {
+      final url = Uri.parse('http://127.0.0.1:8000/api/order/$orderId/update-status-$status');
+      final response = await http.put(url);
+      if (response.statusCode == 200) {
+        return response.statusCode;
+      } else {
+        throw Exception('Failed to update order status: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to update order status: $e');
+    }
+  }
+
   static Future<List<Item>> fetchItemsFromUrl() async {
-    final response =
-        await http.get(Uri.parse('http://127.0.0.1:8000/api/order'));
+    final response = await http.get(Uri.parse('http://127.0.0.1:8000/api/order'));
     final jsonData = json.decode(response.body);
 
     final List<Item> items = [];

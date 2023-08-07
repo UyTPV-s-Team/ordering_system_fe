@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:ordering_system_fe/models/item.dart';
 import 'package:ordering_system_fe/templates/base_widget.dart';
@@ -15,6 +17,9 @@ class _WaitingScreenState extends State<WaitingScreen> {
     // TODO: implement initState
     super.initState();
     fetchOrders();
+    Timer.periodic(Duration(seconds: 10), (Timer timer) {
+      fetchOrders(); // Gọi phương thức fetchOrders để làm mới giao diện sau mỗi 10 giây
+    });
   }
 
   void fetchOrders() async {
@@ -31,7 +36,7 @@ class _WaitingScreenState extends State<WaitingScreen> {
   }
 
   List<Item> filterReadyOrders(List<Item> orders) {
-    return orders.where((item) => item.isReady).toList();
+    return orders.where((item) => item.isReady && !item.isDelivered).toList();
   }
 
   void updatePreparingOrders(orders) {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:ordering_system_fe/components/header_widget.dart';
 import 'package:ordering_system_fe/components/legend_item_widget.dart';
@@ -18,12 +20,24 @@ class _KitchenScreenState extends State<KitchenScreen> {
     // TODO: implement initState
     super.initState();
     fetchOrders();
+    Timer.periodic(Duration(seconds: 5), (Timer timer) {
+      fetchOrders(); // Gọi phương thức fetchOrders để làm mới giao diện sau mỗi 10 giây
+    });
   }
 
   void fetchOrders() async {
     List<Item> orders = await getOrders();
     List<Item> filteredOrders = filterOrders(orders);
     updateUI(filteredOrders);
+  }
+
+  void updateOrder(orderId, status) async {
+    int responseStatus = await updateStatus(orderId, status);
+    if (responseStatus == 200) {
+      fetchOrders();
+    } else {
+      print('FAIL');
+    }
   }
 
   List<Item> filterOrders(List<Item> orders) {
@@ -42,6 +56,10 @@ class _KitchenScreenState extends State<KitchenScreen> {
 
   Future<List<Item>> getOrders() async {
     return await Item.fetchItemsFromUrl();
+  }
+
+  Future<int> updateStatus(orderId, status) async {
+    return await Item.updateOrderStatus(orderId, status);
   }
 
   List<Item> items = [];
@@ -206,6 +224,27 @@ class _KitchenScreenState extends State<KitchenScreen> {
                                             ),
                                           );
                                         },
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                            padding: MaterialStateProperty.all(EdgeInsets.all(20)),
+                                            backgroundColor: MaterialStateProperty.all(
+                                                item.isPreparation ? Color(0xff241417) : Color(0xff3E83A2))),
+                                        onPressed: () {
+                                          // Xử lý sự kiện khi nút được nhấn
+                                          if (!item.isPreparation) {
+                                            updateOrder(item.id, 'preparation');
+                                          } else {
+                                            updateOrder(item.id, 'ready');
+                                          }
+                                        },
+                                        child: Text(
+                                          item.isPreparation ? 'Ready' : 'Cook',
+                                          style: TextStyle(fontSize: 24),
+                                        ),
                                       ),
                                     ),
                                   ],
