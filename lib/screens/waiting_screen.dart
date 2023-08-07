@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:ordering_system_fe/models/item.dart';
-import 'package:ordering_system_fe/templates/base_widget.dart';
+import 'package:animated_loading_border/animated_loading_border.dart';
 
 class WaitingScreen extends StatefulWidget {
   static const String screenName = 'waiting_screen';
@@ -108,18 +108,23 @@ class _WaitingScreenState extends State<WaitingScreen> {
                         crossAxisSpacing: 20,
                         children: [
                           for (int i = 0; i < items.length; i++)
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Color(0xFF241417),
-                              ),
-                              child: Center(
-                                child: Text(items[i].id,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 50,
-                                    )),
+                            AnimatedLoadingBorder(
+                              cornerRadius: 8,
+                              borderWidth: items[i].isPreparation ? 10 : 0,
+                              borderColor: items[i].isPreparation ? Color(0xFF389B3A) : Color(0xffEAF8D7),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Color(0xFF241417),
+                                ),
+                                child: Center(
+                                  child: Text(items[i].id,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 50,
+                                      )),
+                                ),
                               ),
                             )
                         ],
